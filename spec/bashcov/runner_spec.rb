@@ -204,6 +204,14 @@ describe Bashcov::Runner do
         runner.run
         expect(runner.result.keys & uncovered_files).to be_empty
       end
+
+      context "when SimpleCov.tracked_files is defined" do
+        it "includes matching files even if they are uncovered" do
+          expect(SimpleCov).to receive(:tracked_files).at_least(:once).and_return(uncovered_files.first)
+          runner.run
+          expect(runner.result.keys & uncovered_files).to contain_exactly(*uncovered_files.first)
+        end
+      end
     end
 
     context "with mute = true" do
@@ -217,6 +225,32 @@ describe Bashcov::Runner do
         end
 
         runner.run
+      end
+    end
+
+    context "with prefilter = true" do
+      before do
+        Bashcov.prefilter = true
+      end
+
+      around do |example|
+        orig_filters = SimpleCov.filters
+
+        SimpleCov.filters = []
+
+        SimpleCov.configure do
+          expected_omitted.each_key { |filter| add_filter(filter) }
+        end
+
+        example.run
+
+        SimpleCov.filters = orig_filters
+      end
+
+      it "omits files matching one or more SimpleCov filters from the results hash" do
+        runner.run
+        result = runner.result
+        expect(result.keys).to contain_exactly(*(expected_coverage.keys - expected_omitted.values.flatten))
       end
     end
   end

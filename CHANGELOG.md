@@ -1,6 +1,12 @@
 ## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.8.2...master))
 
-  * TBD
+  * [FEATURE] Add `--prefilter` flag and corresponding `Bashcov.prefilter`
+              setting. Using this flag causes Bashcov to omit from the coverage
+              results any uncovered files that match one or more of the filters
+              in `SimpleCov.filters`.
+  * [FEATURE] Ensure that files matching the `SimpleCov.tracked_files` glob
+              pattern are included in the coverage results, regardless of
+              whether `Bashcov.skip_uncovered` is enabled.
 
 ## v1.8.2, 2018-03-27 ([changes](https://github.com/infertux/bashcov/compare/v1.8.1...v1.8.2))
 

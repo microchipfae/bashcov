@@ -67,6 +67,15 @@ describe Bashcov do
         end
       end
 
+      context "with the --prefilter flag" do
+        before { @args << "--prefilter" }
+
+        it "sets it properly" do
+          subject
+          expect(Bashcov.prefilter).to be true
+        end
+      end
+
       context "with the --mute flag" do
         before { @args << "--mute" }
 

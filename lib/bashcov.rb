@@ -14,7 +14,7 @@ module Bashcov
 
   # A +Struct+ to store Bashcov configuration
   Options = Struct.new(
-    *%i[skip_uncovered mute bash_path root_directory command command_name]
+    *%i[skip_uncovered prefilter mute bash_path root_directory command command_name]
   )
 
   class << self
@@ -75,6 +75,7 @@ module Bashcov
       @options = Options.new
 
       @options.skip_uncovered   = false
+      @options.prefilter        = false
       @options.mute             = false
       @options.bash_path        = "/bin/bash"
       @options.root_directory   = Dir.getwd
@@ -114,6 +115,9 @@ module Bashcov
 
         opts.on("-s", "--skip-uncovered", "Do not report uncovered files") do |s|
           options.skip_uncovered = s
+        end
+        opts.on("-p", "--prefilter", "Exclude uncovered files that match SimpleCov filters") do |s|
+          options.prefilter = s
         end
         opts.on("-m", "--mute", "Do not print script output") do |m|
           options.mute = m
